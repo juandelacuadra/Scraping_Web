@@ -27,11 +27,11 @@ Para instalar las dependencias necesarias para ejecutar este proyecto, se recomi
 
 ## Usage
 
-1. Ejecuta "1 - Listados".  Generará los listados provinciales en ```src\data\0_Provincias```
-*Execute "1 - Listados".  It will generate the provincial lists in  ```src\data\0_Provincias```*
+1. Ejecuta [1-Listados](1-Listados.ipynb).  Generará los listados provinciales en ```src\data\0_Provincias```
+*Execute [1-Listados](1-Listados.ipynb).  It will generate the provincial lists in  ```src\data\0_Provincias```*
 
-1. Ejecuta "2 - Mining".  Generará los directorios de empresas por provincia en ```src\data\1_Directorios```
-*Execute "2 - Mining".  It will generate the company directories by province in ```src\data\1_Directorios```*
+1. Ejecuta [2-Mining](2-Mining.ipynb).  Generará los directorios de empresas por provincia en ```src\data\1_Directorios```
+*Execute [2-Mining](2-Mining.ipynb).  It will generate the company directories by province in ```src\data\1_Directorios```*
 
 
 
@@ -40,8 +40,8 @@ Para instalar las dependencias necesarias para ejecutar este proyecto, se recomi
 
 ### Notebooks:
 
-1. Listados: Genera los listados de municipios por provincia. / *Generates lists of municipalities by province.*
-2. Mining: Extrae los datos de empresas. / *Extracts data of companies.*
+1. [Listados](1-Listados.ipynb): Genera los listados de municipios por provincia. / *Generates lists of municipalities by province.*
+2. [Mining](2-Mining.ipynb): Extrae los datos de empresas. / *Extracts data of companies.*
 
 ### Script:
 
