@@ -1,31 +1,58 @@
 # Web Scraping
+- Herramienta de minado para generar una BBDD de contactos comerciales.
+- *Mining tool to generate a database of commercial contacts.*
 
-Herramienta de webscrapping para obtener información comercial.
+## Description
 
-### Checkea los stats:
+- El proyecto se concibió inicialmente como una práctica en el uso de Beautiful Soup.
+- Utilizando esta biblioteca, se ha desarrollado una herramienta para recopilar la información disponible de todas las empresas registradas en España a partir de un directorio web.
 
-[![wakatime](https://wakatime.com/badge/user/b1ab7341-4bc0-42d2-b23e-64c7e9be3d50/project/039a28fe-172d-468d-b8ad-fd4c64db1b2f.svg?style=for-the-badge)](https://wakatime.com/badge/user/b1ab7341-4bc0-42d2-b23e-64c7e9be3d50/project/039a28fe-172d-468d-b8ad-fd4c64db1b2f)
+-   *The project was initially conceived as a practice in the use of Beautiful Soup.*
+-   *Using this library, a tool has been developed to gather available information from all registered companies in Spain from a web directory.*
 
-### Ideas generales:
+## Contents
+-  [Installation](#installation)
+-  [Files](#files)
+-  [Usage](#usage)
+-  [License](#license)
+- [Badges](#badges)
 
-- Recorro la carpeta de provincias.
-- Dentro de cada archivo, recorro los municipios.
-- Dentro de cada municipio, **empieza la fiesta**:
+## Installation
 
-  - En el municipio aparece un listado paginado que parte de 1. En el directorio que generemos insertaremos el número de página para retomar el minado en caso de parada.
+Para instalar las dependencias necesarias para ejecutar este proyecto, se recomienda utilizar un entorno virtual e instalar los paquetes con el siguiente comando:
 
-  - En el caso de que solo exista una página, hay que puentear la iteración.
+*To install the necessary dependencies to run this project, it is recommended to use a virtual environment and install the packages with the following command:*
 
-  - El bucle debe completar todas las empresas de la página antes de pasar a la siguiente.
-    Debemos leer el total de páginas para saber cuando parar.
+```pip install -r requirements.txt```
 
-  - Una vez dentro de la página de la empresa, extraemos todos los datos. Cabe la posibilidad de que la empresa esté extinta, por lo que validamos para pasar de largo de ese registro.
+## Usage
+
+1. Ejecuta "1 - Listados".  Generará los listados provinciales en ```src\data\0_Provincias```
+*Execute "1 - Listados".  It will generate the provincial lists in  ```src\data\0_Provincias```*
+
+1. Ejecuta "2 - Mining".  Generará los directorios de empresas por provincia en ```src\data\1_Directorios```
+*Execute "2 - Mining".  It will generate the company directories by province in ```src\data\1_Directorios```*
+
+
+
+
+## Files
 
 ### Notebooks:
-1. Listados: Genera los listados de municipios por provincia.
-1. Mining: Extrae los directorios de empresas.
 
-### Recursos:
-- AxesorMining: Clase donde recopilamos los distintos métodos que usa el minado.
+1. Listados: Genera los listados de municipios por provincia. / *Generates lists of municipalities by province.*
+2. Mining: Extrae los datos de empresas. / *Extracts data of companies.*
+
+### Script:
+
+- AxesorMining: Clase donde recopilamos los distintos métodos que usa la herramienta. / *Class where we compile the different methods used by the tool.*
+
+## License
+
+PENDIENTE
+
+The last section of a high-quality README file is the license. This lets other developers know what they can and cannot do with your project. If you need help choosing a license, refer to [https://choosealicense.com/](https://choosealicense.com/).
 
 
+## Badges
+[![wakatime](https://wakatime.com/badge/user/b1ab7341-4bc0-42d2-b23e-64c7e9be3d50/project/039a28fe-172d-468d-b8ad-fd4c64db1b2f.svg?style=for-the-badge)](https://wakatime.com/badge/user/b1ab7341-4bc0-42d2-b23e-64c7e9be3d50/project/039a28fe-172d-468d-b8ad-fd4c64db1b2f)
