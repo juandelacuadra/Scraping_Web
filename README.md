@@ -49,9 +49,8 @@ Para instalar las dependencias necesarias para ejecutar este proyecto, se recomi
 
 ## License
 
-PENDIENTE
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
 
-The last section of a high-quality README file is the license. This lets other developers know what they can and cannot do with your project. If you need help choosing a license, refer to [https://choosealicense.com/](https://choosealicense.com/).
 
 
 ## Badges
