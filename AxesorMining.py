@@ -80,7 +80,6 @@ class AxesorMining:
         Devuelve el Soup de la URL que le pasemos sin procesar ningun formato.
         """
 
-
         # ME TRAIGO EL HTML
         response = requests.get(url)
         sleep(3)  # POR DEBAJO DE ESTE TIEMPO NOS CAPAN LA CONEXION
