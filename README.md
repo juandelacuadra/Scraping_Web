@@ -13,27 +13,9 @@
 ## Contents
 -  [Installation](#installation)
 -  [Files](#files)
--  [Usage](#usage)
+- [Getting started](#getting-started)
 -  [License](#license)
 - [Badges](#badges)
-
-## Installation
-
-Para instalar las dependencias necesarias para ejecutar este proyecto, se recomienda utilizar un entorno virtual e instalar los paquetes con el siguiente comando:
-
-*To install the necessary dependencies to run this project, it is recommended to use a virtual environment and install the packages with the following command:*
-
-```pip install -r requirements.txt```
-
-## Usage
-
-1. Ejecuta [1-Listados](1-Listados.ipynb).  Generará los listados provinciales en ```src\data\0_Provincias```
-*Execute [1-Listados](1-Listados.ipynb).  It will generate the provincial lists in  ```src\data\0_Provincias```*
-
-1. Ejecuta [2-Mining](2-Mining.ipynb).  Generará los directorios de empresas por provincia en ```src\data\1_Directorios```
-*Execute [2-Mining](2-Mining.ipynb).  It will generate the company directories by province in ```src\data\1_Directorios```*
-
-
 
 
 ## Files
@@ -47,6 +29,23 @@ Para instalar las dependencias necesarias para ejecutar este proyecto, se recomi
 
 - AxesorMining: Clase donde recopilamos los distintos métodos que usa la herramienta. / *Class where we compile the different methods used by the tool.*
 
+## Getting started
+
+Este proyecto te permite extraer información de las empresas registradas en España a partir de un directorio web. Para empezar, sigue estos pasos:
+
+- Clona este repositorio en tu máquina local.
+- Crea un entorno virtual e instala las dependencias con `pip install -r requirements.txt`.
+- Ejecuta el notebook `1-Listados.ipynb` para generar los listados de municipios por provincia en la carpeta `src\data\0_Provincias`.
+- Ejecuta el notebook `2-Mining.ipynb` para generar los directorios de empresas por provincia en la carpeta `src\data\1_Directorios`.
+- Explora los datos obtenidos y disfruta.
+
+This project allows you to extract information from the companies registered in Spain from a web directory. To get started, follow these steps:
+
+- Clone this repository on your local machine.
+- Create a virtual environment and install the dependencies with `pip install -r requirements.txt`.
+- Run the notebook `1-Listados.ipynb` to generate the lists of municipalities by province in the folder `src\data\0_Provincias`.
+- Run the notebook `2-Mining.ipynb` to generate the directories of companies by province in the folder `src\data\1_Directorios`.
+- Explore the data obtained and enjoy.
 ## License
 
 This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
