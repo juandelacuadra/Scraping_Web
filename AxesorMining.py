@@ -202,11 +202,13 @@ class AxesorMining:
                 # EQUIVALENCIAS
                 try:
                     # PRIMER INTENTO AL VUELO
-                    insert_empresa[key] = dict_empresa[self.DICT_EQUIVALENCIAS[key]].strip()
+                    insert_empresa[key] = dict_empresa[self.DICT_EQUIVALENCIAS[key]].strip(
+                    )
                 except KeyError:
                     try:
                         # LOS CAMPOS DE DIRECCIÓN ESTÁN EN UN SEGUNDO NIVEL
-                        insert_empresa[key] = dict_empresa['address'][self.DICT_EQUIVALENCIAS_DIRECCION[key]].strip()
+                        insert_empresa[key] = dict_empresa['address'][self.DICT_EQUIVALENCIAS_DIRECCION[key]].strip(
+                        )
                     except:
                         # SI NO EXISTE, LO PONEMOS
                         insert_empresa[key] = 'SIN DATOS'
