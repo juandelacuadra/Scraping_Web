@@ -2,6 +2,7 @@
 from bs4 import BeautifulSoup as bs
 from time import sleep
 import json
+import os
 import pandas as pd
 import requests
 
@@ -17,11 +18,10 @@ class AxesorMining:
     COLUMNAS_DF -> Define las columnas que va a tener la tabla.
 
     === METODOS ===
-    request_soup(url)               -> Devuelve el Soup de la URL que le pasemos sin procesar ningun formato.
-    paginado(url_municipio)         -> Devuelve el numero de páginas del municipio.
-    listado_empresas(url_page)      -> Devuelve el listado de empresas de la página.
-    listado_empresas(url_page)      -> Devuelve el listado de empresas de la página.
-    depurar_empresas(dir_provincia) -> Revisa si nos hemos saltado alguna empresa.
+    request_soup(url)          -> Devuelve el Soup de la URL que le pasemos sin procesar ningun formato.
+    paginado(url_municipio)    -> Devuelve el numero de páginas del municipio.
+    listado_empresas(url_page) -> Devuelve el listado de empresas de la página.
+    obtener_empresa(parametros)-> Devuelve un diccionario con los datos de la empresa.
     '''
 
     # ATRIBUTOS:
@@ -78,22 +78,37 @@ class AxesorMining:
         """
         Parámetro: url (str).
         Devuelve el Soup de la URL que le pasemos sin procesar ningun formato.
+        Reintenta hasta 3 veces si salta el captcha.
         """
 
-        # ME TRAIGO EL HTML
-        response = requests.get(url)
-        sleep(3)  # POR DEBAJO DE ESTE TIEMPO NOS CAPAN LA CONEXION
-        html = response.content
-        soup = bs(html, "lxml")
-        print('Respuesta del servidor: ' + str(response))
+        # INTENTAMOS UN MÁXIMO DE 3 VECES (PARA EVITAR UN BUCLE INFINITO)
+        for intento in range(3):
 
-        if soup.find('meta', attrs={'name': 'ROBOTS'}):  # TRAE CAPTCHA
+            # ME TRAIGO EL HTML CON TIMEOUT PARA NO QUEDARNOS COLGADOS
+            response = requests.get(url, timeout=15)
+            sleep(3)  # POR DEBAJO DE ESTE TIEMPO NOS CAPAN LA CONEXION
+            print('Respuesta del servidor: ' + str(response.status_code))
 
-            print('>> Ha saltado el captcha. Reintentando en 20 segundos...')
-            sleep(20)
-            soup = self.request_soup(url)
+            # SI EL SERVIDOR NOS DA UN ERROR, SALIMOS DIRECTAMENTE
+            if response.status_code != 200:
+                print('>> Error del servidor: ' + str(response.status_code))
+                return None
 
-        return soup
+            html = response.content
+            soup = bs(html, "lxml")
+
+            # COMPROBAMOS SI NOS HAN PUESTO CAPTCHA
+            if soup.find('div', id='captcha') or soup.find('title', string=lambda t: t and 'captcha' in t.lower()):
+                print('>> Ha saltado el captcha. Reintentando en 20 segundos... (intento ' + str(intento + 1) + ' de 3)')
+                sleep(20)
+                continue  # VOLVEMOS A INTENTARLO
+
+            # SI TODO BIEN, DEVOLVEMOS EL SOUP
+            return soup
+
+        # SI AGOTAMOS LOS INTENTOS, AVISAMOS Y DEVOLVEMOS None
+        print('>> No se pudo obtener la página tras 3 intentos: ' + url)
+        return None
 
     def paginado(self, url_municipio):
         """
@@ -152,6 +167,10 @@ class AxesorMining:
         # EXTRAIGO EL CÓDIGO
         soup = self.request_soup(url_empresa)
 
+        # SI request_soup DEVOLVIÓ None (ERROR O CAPTCHA), SALIMOS
+        if soup is None:
+            return None
+
         # =========================================== #
         # TENGO QUE VALIDAR SI VIENE CON CAPTCHA O NO #
         # =========================================== #
@@ -162,7 +181,7 @@ class AxesorMining:
 
             # 1 - DECLARO UN DICCIONARIO A RELLENAR CON LA MISMA ESTRUCTURA QUE LAS COLUMNAS DEL DF
             insert_empresa = {
-                'Provincia': dir_provincia[:-2],
+                'Provincia': os.path.splitext(dir_provincia)[0],  # QUITO LA EXTENSION DEL NOMBRE DE ARCHIVO
                 'Index Localidad': 0,
                 'Localidad': nombre_municipio,
                 'Pagina': '',
@@ -188,6 +207,9 @@ class AxesorMining:
             # 2 - BUSCO EL SCRIPT CON LOS REQUISITOS, ES EL QUE TRAE LOS DATOS.
             scripts = soup.find_all("script", type="application/ld+json")
 
+            # INICIALIZO EL DICCIONARIO A None PARA SABER SI LO ENCONTRAMOS O NO
+            dict_empresa = None
+
             # LIMPIO LA INFO Y CONVIERTO DE JSON A DICT
             for i in scripts:
                 soup_script = i.get_text(strip=True).replace("\n", "")
@@ -196,6 +218,11 @@ class AxesorMining:
                 # DENTRO DE LOS SCRIPTS, APUNTO AL CORRECTO
                 if '@type' in json_script and json_script['@type'] == 'LocalBusiness':
                     dict_empresa = json_script
+
+            # SI NO ENCONTRAMOS EL SCRIPT CON DATOS, SALIMOS
+            if dict_empresa is None:
+                print('>> No se encontraron datos JSON de la empresa.')
+                return None
 
             # CRUZO PARA RELLENAR VALORES
             for key in insert_empresa:
@@ -209,7 +236,7 @@ class AxesorMining:
                         # LOS CAMPOS DE DIRECCIÓN ESTÁN EN UN SEGUNDO NIVEL
                         insert_empresa[key] = dict_empresa['address'][self.DICT_EQUIVALENCIAS_DIRECCION[key]].strip(
                         )
-                    except:
+                    except Exception:
                         # SI NO EXISTE, LO PONEMOS
                         insert_empresa[key] = 'SIN DATOS'
 
@@ -227,7 +254,7 @@ class AxesorMining:
                 td_element = soup.find('td', text='Forma jurídica:')
                 value_forma = td_element.find_next_sibling().text.strip()
                 insert_empresa['Forma Juridica'] = value_forma
-            except:
+            except Exception:
                 insert_empresa['Forma Juridica'] = 'SIN DATOS'
 
             # FILA DE tablaInformacionGeneral DONDE EL PRIMER td ES 'CNAE:' Y EL SEGUNDO ES EL VALOR.
@@ -240,7 +267,7 @@ class AxesorMining:
                 cnae_literal = value_cnae[len(cnae):].strip()
                 insert_empresa['CNAE'] = cnae
                 insert_empresa['CNAE Literal'] = cnae_literal
-            except:
+            except Exception:
                 insert_empresa['CNAE'] = 'SIN DATOS'
                 insert_empresa['CNAE Literal'] = 'SIN DATOS'
 
@@ -254,7 +281,7 @@ class AxesorMining:
                 sic_literal = value_sic[len(sic):].strip()
                 insert_empresa['SIC'] = sic
                 insert_empresa['SIC Literal'] = sic_literal
-            except:
+            except Exception:
                 insert_empresa['SIC'] = 'SIN DATOS'
                 insert_empresa['SIC Literal'] = 'SIN DATOS'
 

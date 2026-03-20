@@ -22,8 +22,8 @@
 
 ### Notebooks:
 
-1. [Listados](1-Listados.ipynb): Genera los listados de municipios por provincia. / *Generates lists of municipalities by province.*
-2. [Mining](2-Mining.ipynb): Extrae los datos de empresas. / *Extracts data of companies.*
+1. [Listados](notebooks/1-Listados.ipynb): Genera los listados de municipios por provincia. / *Generates lists of municipalities by province.*
+2. [Mining](notebooks/2-Mining.ipynb): Extrae los datos de empresas. / *Extracts data of companies.*
 
 ### Script:
 
